@@ -1203,11 +1203,24 @@
         
         // 保存游戏进度
         function saveGame() {
+            // 更新currentBoard为包含用户输入的状态
+            const updatedBoard = JSON.parse(JSON.stringify(currentBoard));
+            const inputs = document.querySelectorAll('.cell input');
+            for (let input of inputs) {
+                const r = parseInt(input.dataset.row);
+                const c = parseInt(input.dataset.col);
+                if (input.value) {
+                    updatedBoard[r][c] = parseInt(input.value);
+                } else {
+                    updatedBoard[r][c] = '';
+                }
+            }
+            
             // 收集当前游戏状态
             const gameState = {
                 difficulty: currentDifficulty,
                 targetBoard: targetBoard,
-                currentBoard: currentBoard,
+                currentBoard: updatedBoard,
                 elapsedTime: Date.now() - startTime,
                 isGameStarted: isGameStarted
             };
