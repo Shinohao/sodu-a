@@ -1,0 +1,19 @@
+{
+  "name": "Sodu-A - 数独游戏",
+  "short_name": "Sodu-A",
+  "description": "经典9×9数独游戏，支持多种难度级别",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#3498db",
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "orientation": "portrait",
+  "categories": ["games", "education"]
+}
