@@ -820,72 +820,24 @@
             }
         }
         
-        // 验证输入是否符合数独规则
+        // 验证输入是否与正确答案一致
         function validateInput(input) {
             const value = input.value;
             const row = parseInt(input.dataset.row);
             const col = parseInt(input.dataset.col);
             
-            // 重置所有错误状态
-            document.querySelectorAll('.cell.error').forEach(cell => {
-                cell.classList.remove('error');
-            });
-            
-            if (!value) return;
-            
-            // 检查行
-            for (let j = 0; j < 9; j++) {
-                if (j !== col) {
-                    // 检查固定数字
-                    const fixedCell = document.querySelector(`#sudokuGrid > div:nth-child(${row * 9 + j + 1})`);
-                    if (fixedCell && fixedCell.classList.contains('fixed') && fixedCell.textContent === value) {
-                        input.parentElement.classList.add('error');
-                    }
-                    // 检查其他输入
-                    const inputCell = document.querySelector(`input[data-row="${row}"][data-col="${j}"]`);
-                    if (inputCell && inputCell.value === value) {
-                        inputCell.parentElement.classList.add('error');
-                        input.parentElement.classList.add('error');
-                    }
-                }
+            if (!value) {
+                input.parentElement.classList.remove('error');
+                return;
             }
             
-            // 检查列
-            for (let i = 0; i < 9; i++) {
-                if (i !== row) {
-                    // 检查固定数字
-                    const fixedCell = document.querySelector(`#sudokuGrid > div:nth-child(${i * 9 + col + 1})`);
-                    if (fixedCell && fixedCell.classList.contains('fixed') && fixedCell.textContent === value) {
-                        input.parentElement.classList.add('error');
-                    }
-                    // 检查其他输入
-                    const inputCell = document.querySelector(`input[data-row="${i}"][data-col="${col}"]`);
-                    if (inputCell && inputCell.value === value) {
-                        inputCell.parentElement.classList.add('error');
-                        input.parentElement.classList.add('error');
-                    }
-                }
-            }
+            const correctValue = targetBoard[row][col];
+            const inputValue = parseInt(value);
             
-            // 检查区域（3×3的小区域）
-            const boxRow = Math.floor(row / 3);
-            const boxCol = Math.floor(col / 3);
-            for (let i = boxRow * 3; i < boxRow * 3 + 3; i++) {
-                for (let j = boxCol * 3; j < boxCol * 3 + 3; j++) {
-                    if (i !== row || j !== col) {
-                        // 检查固定数字
-                        const fixedCell = document.querySelector(`#sudokuGrid > div:nth-child(${i * 9 + j + 1})`);
-                        if (fixedCell && fixedCell.classList.contains('fixed') && fixedCell.textContent === value) {
-                            input.parentElement.classList.add('error');
-                        }
-                        // 检查其他输入
-                        const inputCell = document.querySelector(`input[data-row="${i}"][data-col="${j}"]`);
-                        if (inputCell && inputCell.value === value) {
-                            inputCell.parentElement.classList.add('error');
-                            input.parentElement.classList.add('error');
-                        }
-                    }
-                }
+            if (inputValue !== correctValue) {
+                input.parentElement.classList.add('error');
+            } else {
+                input.parentElement.classList.remove('error');
             }
         }
         
