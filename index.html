@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Sodu-A - 数独游戏</title>
     <!-- PWA 相关标签 -->
     <meta name="description" content="经典9×9数独游戏，支持多种难度级别">
@@ -402,6 +405,10 @@
             <p>不同难度级别对应不同数量的空白格子</p>
         </div>
         
+        <div class="version-info" id="versionInfo" style="text-align: center; margin-top: 20px; color: #999; font-size: 12px;">
+            版本号：<span id="versionNumber">加载中...</span>
+        </div>
+        
         <div class="success-message" id="successMessage">
             Good Chenny！<br>
             用时：<span id="finalTime">00:00</span>
@@ -410,6 +417,7 @@
     
     <script>
         // 游戏状态
+        const APP_VERSION = 'v1.2';
         let currentDifficulty = 'easy';
         let currentBoard = [];
         let targetBoard = [];
@@ -949,6 +957,9 @@
         
         // 初始化游戏
         function init() {
+            // 显示版本号
+            document.getElementById('versionNumber').textContent = APP_VERSION;
+            
             // 开始游戏
             startGame(currentDifficulty);
             
@@ -1232,6 +1243,30 @@
                 navigator.serviceWorker.register('service-worker.js')
                     .then(registration => {
                         console.log('ServiceWorker 注册成功:', registration.scope);
+                        
+                        // 检查是否有更新可用
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            console.log('发现新版本 Service Worker，正在安装...');
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed') {
+                                    if (navigator.serviceWorker.controller) {
+                                        // 有新版本可用，提示用户刷新
+                                        console.log('新版本已准备就绪！');
+                                        // 这里可以添加一个提示框让用户刷新页面
+                                        if (confirm('发现新版本，是否立即刷新？')) {
+                                            window.location.reload();
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                        
+                        // 每隔一段时间检查一次更新
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // 每分钟检查一次
                     })
                     .catch(error => {
                         console.log('ServiceWorker 注册失败:', error);
